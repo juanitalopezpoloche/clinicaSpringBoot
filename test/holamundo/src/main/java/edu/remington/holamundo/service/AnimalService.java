@@ -5,8 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import edu.remington.holamundo.dto.AcudienteRequest;
-import edu.remington.holamundo.dto.AcudienteResponse;
 import edu.remington.holamundo.dto.AnimalRequest;
 import edu.remington.holamundo.dto.AnimalResponse;
 import edu.remington.holamundo.model.Acudiente;
@@ -43,7 +41,7 @@ public class AnimalService {
         Animal animal = findAnimal(id);
         animalRepository.delete(animal);
     }
-    
+
     @Transactional(readOnly = true)
     public Page<AnimalResponse> listar(Pageable pageable){
         return animalRepository.findAll(pageable)
