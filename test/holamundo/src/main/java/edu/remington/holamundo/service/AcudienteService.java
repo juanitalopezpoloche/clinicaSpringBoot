@@ -3,12 +3,12 @@ package edu.remington.holamundo.service;
 import org.springframework.boot.data.autoconfigure.web.DataWebProperties.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import edu.remington.holamundo.dto.AcudienteRequest;
 import edu.remington.holamundo.dto.AcudienteResponse;
 import edu.remington.holamundo.model.Acudiente;
 import edu.remington.holamundo.repository.AcudienteRepository;
-import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
@@ -24,29 +24,35 @@ public class AcudienteService {
         Acudiente acudiente = new Acudiente();
         applyRequest(acudiente, request);
         Acudiente saved = acudienteRepository.save(acudiente);
-        return toResponse(acudienteRepository.save(acudiente));
+        return toResponse(saved);
     }
 
     public AcudienteResponse actualizar(long id, AcudienteRequest request){
-        Acudiente acudiente = findAcudiente();
+        Acudiente acudiente = findAcudiente(id);
         applyRequest(acudiente, request);
-        return  toResponse(saved);
+        Acudiente update = acudienteRepository.save(acudiente);
+        return  toResponse(update);
     }
 
-    @Transactional
+    public void eliminar(long id){
+        Acudiente acudiente = findAcudiente(id);
+        acudienteRepository.delete(acudiente);
+    }
+
+    @Transactional(readOnly = true)
     public Page<AcudienteResponse> listar(Pageable pageable){
         return acudienteRepository.findAll(pageable).map(this::toResponse);
     }
 
     @Transactional
-    public AcudienteResponse obtener(Long id){
+    public AcudienteResponse obtenerPorId(Long id){
         Acudiente acudiente = findAcudiente(id);
         return toResponse(acudiente);
     }
 
     private Acudiente findAcudiente(Long id){
         return acudienteRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Acudiente no encontrado"));
+            .orElseThrow(() -> new RuntimeException("Acudiente no encontrado con id " + id));
     }
 
     private void applyRequest(Acudiente acudiente, AcudienteRequest request){
