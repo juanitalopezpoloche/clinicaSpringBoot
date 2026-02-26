@@ -5,8 +5,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-import edu.remington.holamundo.model.Acudiente;
-
 @Getter
 @Setter
 public class AnimalRequest {
@@ -33,7 +31,4 @@ public class AnimalRequest {
     
     @NotBlank
     public Long acudienteId;
-
-    @NotBlank
-    private Acudiente acudiente;
 }

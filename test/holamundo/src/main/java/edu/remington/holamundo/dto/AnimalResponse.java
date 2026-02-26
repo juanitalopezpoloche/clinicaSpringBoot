@@ -1,7 +1,6 @@
 package edu.remington.holamundo.dto;
 import java.time.LocalDate;
 
-import edu.remington.holamundo.model.Acudiente;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,5 +16,4 @@ public class AnimalResponse {
     private LocalDate fechaNacimiento;
     private String sexo;
     private Long acudienteId;
-    private Acudiente acudiente;
 }
