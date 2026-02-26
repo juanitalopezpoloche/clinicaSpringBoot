@@ -1,12 +1,12 @@
 package edu.remington.holamundo.service;
 
-import org.springframework.boot.data.autoconfigure.web.DataWebProperties.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import edu.remington.holamundo.dto.AnimalRequest;
 import edu.remington.holamundo.dto.AnimalResponse;
+import edu.remington.holamundo.exception.ResourceNotFoundException;
 import edu.remington.holamundo.model.Acudiente;
 import edu.remington.holamundo.model.Animal;
 import edu.remington.holamundo.repository.AcudienteRepository;
@@ -25,14 +25,16 @@ public class AnimalService {
 
     public AnimalResponse crear(AnimalRequest request){
         Animal animal = new Animal();
-        applyRequest(animal, request);
+        Acudiente acudiente = findAcudiente(request.getAcudienteId());
+        applyRequest(animal, request, acudiente);
         Animal saved = animalRepository.save(animal);
         return toResponse(saved);
     }
 
     public AnimalResponse actualizar(long id, AnimalRequest request){
         Animal animal = findAnimal(id);
-        applyRequest(animal, request);
+        Acudiente acudiente = findAcudiente(request.getAcudienteId());
+        applyRequest(animal, request, acudiente);
         Animal update = animalRepository.save(animal);
         return  toResponse(update);
     }
@@ -44,8 +46,7 @@ public class AnimalService {
 
     @Transactional(readOnly = true)
     public Page<AnimalResponse> listar(Pageable pageable){
-        return animalRepository.findAll(pageable)
-                .map(this::toResponse);
+        return animalRepository.findAll(pageable).map(this::toResponse);
     }
 
     @Transactional
@@ -54,12 +55,22 @@ public class AnimalService {
         return toResponse(animal);
     }
 
+    @Transactional(readOnly = true)
+    private Page<AnimalResponse> buscarPorDocumento(String documento, Pageable pageable){
+        return animalRepository.findByDocumentoAcudiente(documento, pageable).map(this::toResponse);   
+    }
+
     private Animal findAnimal(Long id){
         return animalRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Animal no encontrado con id " + id));
     }
+    
+    private Acudiente findAcudiente(Long id){
+        return acudienteRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Acudiente no encontrado con id " + id));
+    }
 
-    private void applyRequest(Animal animal, AnimalRequest request) {
+    private void applyRequest(Animal animal, AnimalRequest request, Acudiente acudiente) {
         animal.setNombre(request.getNombre());
         animal.setEspecie(request.getEspecie());
         animal.setRaza(request.getRaza());
@@ -67,11 +78,6 @@ public class AnimalService {
         animal.setPeso(request.getPeso());
         animal.setFechaNacimiento(request.getFechaNacimiento());
         animal.setSexo(request.getSexo());
-    
-        Acudiente acudiente = acudienteRepository
-            .findById(request.getAcudienteId())
-            .orElseThrow(() -> new RuntimeException("Acudiente no encontrado"));
-    
         animal.setAcudiente(acudiente);
     }
 

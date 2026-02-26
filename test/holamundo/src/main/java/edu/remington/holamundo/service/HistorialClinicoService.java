@@ -26,27 +26,23 @@ public class HistorialClinicoService {
 
     public HistorialClinicoResponse crear(HistorialClinicoRequest request) {
         HistorialClinico historial = new HistorialClinico();
-        applyRequest(historial, request);
+        Animal animal = findAnimal(request.getAnimalId());
+        applyRequest(historial, request, animal);
         HistorialClinico saved = historialRepository.save(historial);
         return toResponse(saved);
     }
 
     public HistorialClinicoResponse actualizar(Long id, HistorialClinicoRequest request) {
-        HistorialClinico historial = findById(id);
-        applyRequest(historial, request);
+        HistorialClinico historial = findHistorialClinico(id);
+        Animal animal = findAnimal(request.getAnimalId());
+        applyRequest(historial, request, animal);
         HistorialClinico updated = historialRepository.save(historial);
         return toResponse(updated);
     }
 
     public void eliminar(Long id) {
-        HistorialClinico historial = findById(id);
+        HistorialClinico historial = findHistorialClinico(id);
         historialRepository.delete(historial);
-    }
-
-    @Transactional(readOnly = true)
-    public HistorialClinicoResponse obtenerPorId(Long id) {
-        HistorialClinico historial = findById(id);
-        return toResponse(historial);
     }
 
     @Transactional(readOnly = true)
@@ -55,12 +51,23 @@ public class HistorialClinicoService {
                 .map(this::toResponse);
     }
 
-    private HistorialClinico findById(Long id) {
+    @Transactional(readOnly = true)
+    public HistorialClinicoResponse obtenerPorId(Long id) {
+        HistorialClinico historial = findHistorialClinico(id);
+        return toResponse(historial);
+    }    
+
+    private HistorialClinico findHistorialClinico(Long id) {
         return historialRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Historial clínico no encontrado con id " + id));
     }
 
-    private void applyRequest(HistorialClinico historial, HistorialClinicoRequest request) {
+    private Animal findAnimal(Long id){
+        return animalRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Animal no encontrado con id " + id));
+    }
+
+    private void applyRequest(HistorialClinico historial, HistorialClinicoRequest request, Animal animal) {
         historial.setFechaNacimiento(request.getFechaNacimiento());
         historial.setMotivoConsulta(request.getMotivoConsulta());
         historial.setDiagnostico(request.getDiagnostico());
@@ -68,10 +75,6 @@ public class HistorialClinicoService {
         historial.setMedicamentos(request.getMedicamentos());
         historial.setObservaciones(request.getObservaciones());
         historial.setVeterinario(request.getVeterinario());
-
-        Animal animal = animalRepository.findById(request.getAnimalId())
-                .orElseThrow(() -> new RuntimeException("Animal no encontrado"));
-
         historial.setAnimal(animal);
     }
 
