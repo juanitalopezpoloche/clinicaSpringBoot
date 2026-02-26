@@ -53,7 +53,7 @@ public class Animal {
     @Column(nullable = false)
     private String sexo;
 
-    private String documentoAcudiente; 
+    /* private String documentoAcudiente;  */
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "acudiente_id", nullable = false)
