@@ -54,12 +54,12 @@ public class AnimalService {
         Animal animal = findAnimal(id);
         return toResponse(animal);
     }
-/* 
+
     @Transactional(readOnly = true)
     private Page<AnimalResponse> buscarPorDocumento(String documento, Pageable pageable){
         return animalRepository.findByDocumentoAcudientes(documento, pageable).map(this::toResponse);   
     }
-*/
+
     private Animal findAnimal(Long id){
         return animalRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Animal no encontrado con id " + id));
