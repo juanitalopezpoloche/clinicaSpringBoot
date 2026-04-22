@@ -53,11 +53,9 @@ public class Animal {
     @Column(nullable = false)
     private String sexo;
 
-    private String documentoAcudiente; 
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "acudiente_id", nullable = false)
-    @ToString.Exclude 
+    @ToString.Exclude
     private Acudiente acudiente;
 
     @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL, orphanRemoval = true)

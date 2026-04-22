@@ -1,7 +1,6 @@
 package edu.remington.holamundo.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,8 +39,8 @@ public class AcudienteService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AcudienteResponse> listar(Pageable pageable){
-        return acudienteRepository.findAll(pageable).map(this::toResponse);
+    public List<AcudienteResponse> listar() {
+        return acudienteRepository.findAll().stream().map(this::toResponse).toList();
     }
 
     @Transactional

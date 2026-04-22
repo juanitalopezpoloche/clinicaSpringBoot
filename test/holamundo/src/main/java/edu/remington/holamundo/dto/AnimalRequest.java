@@ -30,5 +30,5 @@ public class AnimalRequest {
     private String sexo;
     
     @NotBlank
-    public Long acudienteId;
+    public Long acudiente;
 }

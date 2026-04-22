@@ -30,7 +30,7 @@ public class HistorialClinico {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDate fechaNacimiento;
+    private LocalDate fechaConsulta;
 
     @Column(nullable = false, length = 500)
     private String motivoConsulta;

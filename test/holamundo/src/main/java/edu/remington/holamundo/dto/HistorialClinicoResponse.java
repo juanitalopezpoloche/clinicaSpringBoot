@@ -10,7 +10,7 @@ import lombok.Setter;
 public class HistorialClinicoResponse {
 
     private Long id;
-    private LocalDate fechaNacimiento;
+    private LocalDate fechaConsulta;
     private String motivoConsulta;
     private String diagnostico;
     private String tratamiento;

@@ -1,6 +1,8 @@
 package edu.remington.holamundo.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +12,7 @@ import lombok.Setter;
 public class HistorialClinicoRequest {
 
     @NotBlank
-    private LocalDate fechaNacimiento;
+    private LocalDate fechaConsulta;
 
     @NotBlank
     private String motivoConsulta;

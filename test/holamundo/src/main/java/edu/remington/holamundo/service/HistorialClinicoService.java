@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 import edu.remington.holamundo.dto.HistorialClinicoRequest;
 import edu.remington.holamundo.dto.HistorialClinicoResponse;
@@ -55,11 +56,17 @@ public class HistorialClinicoService {
     public HistorialClinicoResponse obtenerPorId(Long id) {
         HistorialClinico historial = findHistorialClinico(id);
         return toResponse(historial);
-    }    
+    }
 
+    @Transactional(readOnly = true)
     private HistorialClinico findHistorialClinico(Long id) {
         return historialRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Historial clínico no encontrado con id " + id));
+    }
+
+    @Transactional(readOnly = true)
+    public List<HistorialClinicoResponse> listarPorAnimal(Long animalId) {
+        return historialRepository.findByAnimalId(animalId).stream().map(this::toResponse).toList();
     }
 
     private Animal findAnimal(Long id){
@@ -68,7 +75,7 @@ public class HistorialClinicoService {
     }
 
     private void applyRequest(HistorialClinico historial, HistorialClinicoRequest request, Animal animal) {
-        historial.setFechaNacimiento(request.getFechaNacimiento());
+        historial.setFechaConsulta(request.getFechaConsulta());
         historial.setMotivoConsulta(request.getMotivoConsulta());
         historial.setDiagnostico(request.getDiagnostico());
         historial.setTratamiento(request.getTratamiento());
@@ -82,7 +89,7 @@ public class HistorialClinicoService {
         HistorialClinicoResponse response = new HistorialClinicoResponse();
 
         response.setId(historial.getId());
-        response.setFechaNacimiento(historial.getFechaNacimiento());
+        response.setFechaConsulta(historial.getFechaConsulta());
         response.setMotivoConsulta(historial.getMotivoConsulta());
         response.setDiagnostico(historial.getDiagnostico());
         response.setTratamiento(historial.getTratamiento());

@@ -11,6 +11,7 @@ import edu.remington.holamundo.model.Acudiente;
 import edu.remington.holamundo.model.Animal;
 import edu.remington.holamundo.repository.AcudienteRepository;
 import edu.remington.holamundo.repository.AnimalRepository;
+import java.util.List;
 
 @Service
 @Transactional
@@ -25,7 +26,7 @@ public class AnimalService {
 
     public AnimalResponse crear(AnimalRequest request){
         Animal animal = new Animal();
-        Acudiente acudiente = findAcudiente(request.getAcudienteId());
+        Acudiente acudiente = findAcudiente(request.getAcudiente());
         applyRequest(animal, request, acudiente);
         Animal saved = animalRepository.save(animal);
         return toResponse(saved);
@@ -33,7 +34,7 @@ public class AnimalService {
 
     public AnimalResponse actualizar(long id, AnimalRequest request){
         Animal animal = findAnimal(id);
-        Acudiente acudiente = findAcudiente(request.getAcudienteId());
+        Acudiente acudiente = findAcudiente(request.getAcudiente());
         applyRequest(animal, request, acudiente);
         Animal update = animalRepository.save(animal);
         return  toResponse(update);
@@ -45,8 +46,8 @@ public class AnimalService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AnimalResponse> listar(Pageable pageable){
-        return animalRepository.findAll(pageable).map(this::toResponse);
+    public List<AnimalResponse> listar() {
+        return animalRepository.findAll().stream().map(this::toResponse).toList();
     }
 
     @Transactional
@@ -56,8 +57,13 @@ public class AnimalService {
     }
 
     @Transactional(readOnly = true)
-    private Page<AnimalResponse> buscarPorDocumento(String documento, Pageable pageable){
-        return animalRepository.findByDocumentoAcudientes(documento, pageable).map(this::toResponse);   
+    public List<AnimalResponse> listarPorDocumentoAcudiente(String documento) {
+        return animalRepository.findByAcudienteDocumento(documento).stream().map(this::toResponse).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<AnimalResponse> listarPorAcudiente(Long acudienteId) {
+        return animalRepository.findByAcudienteId(acudienteId).stream().map(this::toResponse).toList();
     }
 
     private Animal findAnimal(Long id){
@@ -92,7 +98,7 @@ public class AnimalService {
         response.setPeso(animal.getPeso());
         response.setFechaNacimiento(animal.getFechaNacimiento());
         response.setSexo(animal.getSexo());
-        response.setAcudienteId(animal.getAcudiente().getId());
+        response.setAcudiente(animal.getAcudiente().getId());
     
         return response;
     }
