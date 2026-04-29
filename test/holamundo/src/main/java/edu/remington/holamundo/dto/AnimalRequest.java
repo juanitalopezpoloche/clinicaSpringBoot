@@ -2,12 +2,18 @@ package edu.remington.holamundo.dto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Getter
 @Setter
 public class AnimalRequest {
+
     @NotBlank
     private String nombre;
 
@@ -17,18 +23,21 @@ public class AnimalRequest {
     @NotBlank
     private String raza;
 
-    @NotBlank
+    @NotNull
+    @PositiveOrZero
     private Integer edad;
 
-    @NotBlank
+    @NotNull
+    @Positive
     private Double peso;
 
-    @NotBlank
+    @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaNacimiento;
 
     @NotBlank
     private String sexo;
-    
-    @NotBlank
-    public Long acudiente;
+
+    @NotNull
+    private Long acudienteId;
 }

@@ -15,5 +15,5 @@ public class AnimalResponse {
     private Double peso;
     private LocalDate fechaNacimiento;
     private String sexo;
-    private Long acudiente;
+    private Long acudienteId;
 }

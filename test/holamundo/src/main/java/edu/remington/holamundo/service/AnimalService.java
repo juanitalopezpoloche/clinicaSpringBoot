@@ -26,7 +26,7 @@ public class AnimalService {
 
     public AnimalResponse crear(AnimalRequest request){
         Animal animal = new Animal();
-        Acudiente acudiente = findAcudiente(request.getAcudiente());
+        Acudiente acudiente = findAcudiente(request.getAcudienteId());
         applyRequest(animal, request, acudiente);
         Animal saved = animalRepository.save(animal);
         return toResponse(saved);
@@ -34,7 +34,7 @@ public class AnimalService {
 
     public AnimalResponse actualizar(long id, AnimalRequest request){
         Animal animal = findAnimal(id);
-        Acudiente acudiente = findAcudiente(request.getAcudiente());
+        Acudiente acudiente = findAcudiente(request.getAcudienteId());
         applyRequest(animal, request, acudiente);
         Animal update = animalRepository.save(animal);
         return  toResponse(update);
@@ -98,7 +98,7 @@ public class AnimalService {
         response.setPeso(animal.getPeso());
         response.setFechaNacimiento(animal.getFechaNacimiento());
         response.setSexo(animal.getSexo());
-        response.setAcudiente(animal.getAcudiente().getId());
+        response.setAcudienteId(animal.getAcudiente().getId());
     
         return response;
     }

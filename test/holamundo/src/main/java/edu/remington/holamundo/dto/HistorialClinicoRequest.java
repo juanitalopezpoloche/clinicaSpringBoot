@@ -1,9 +1,11 @@
 package edu.remington.holamundo.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +13,8 @@ import lombok.Setter;
 @Setter
 public class HistorialClinicoRequest {
 
-    @NotBlank
+    @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaConsulta;
 
     @NotBlank
@@ -31,6 +34,6 @@ public class HistorialClinicoRequest {
     @NotBlank
     private String veterinario;
 
-    @NotBlank
+    @NotNull
     private Long animalId;
 }
